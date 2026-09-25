@@ -1,0 +1,14 @@
+:root {
+  --font-body: "DM Sans", sans-serif;
+  --font-heading: "Playfair Display", Georgia, serif;
+  --ink: #172e39;
+  --paper: #f8f6f1;
+  --soft: #eeece4;
+  --accent: #8c6c3f;
+  --light-accent: #d1b88a;
+  --muted: #596263;
+  --border: #d9dad2;
+  --on-accent: #fff;
+  --on-dark-muted: #bdc9cc;
+  --header-bg: #f8f6f1ed;
+}
