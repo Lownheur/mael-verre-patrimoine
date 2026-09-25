@@ -22,42 +22,66 @@ export function Reveal({
   children,
   className = "",
   delay = 0,
+  from = "up",
+  role,
+  id,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  from?: "up" | "left" | "right" | "scale";
+  role?: string;
+  id?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.12, once: false });
   const direction = useContext(ScrollDirectionContext);
   const controls = useAnimationControls();
+  const hiddenState = (scrollDirection: number) => {
+    if (from === "left")
+      return { opacity: 0, x: scrollDirection > 0 ? -34 : 34 };
+    if (from === "right")
+      return { opacity: 0, x: scrollDirection > 0 ? 34 : -34 };
+    if (from === "scale")
+      return { opacity: 0, y: scrollDirection > 0 ? 20 : -20, scale: 0.94 };
+    return { opacity: 0, y: scrollDirection > 0 ? 24 : -24 };
+  };
 
   useEffect(() => {
     if (reduced) {
-      controls.set({ opacity: 1, y: 0 });
+      controls.set({ opacity: 1, x: 0, y: 0, scale: 1 });
       return;
     }
     if (inView) {
       controls.start({
         opacity: 1,
+        x: 0,
         y: 0,
+        scale: 1,
         transition: { duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] },
       });
     } else {
       controls.start({
-        opacity: 0,
-        y: direction?.current && direction.current < 0 ? 24 : -24,
+        ...hiddenState(direction?.current ?? 1),
         transition: { duration: 0.24, ease: [0.4, 0, 1, 1] },
       });
     }
-  }, [controls, delay, direction, inView, reduced]);
+  }, [controls, delay, direction, from, inView, reduced]);
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={reduced ? false : { opacity: 0, y: 24 }}
+      role={role}
+      id={id}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
+      initial={reduced ? false : hiddenState(1)}
       animate={controls}
     >
       {children}

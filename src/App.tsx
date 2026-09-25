@@ -95,7 +95,7 @@ function Hero() {
   return (
     <section className="hero" id="accueil" ref={target}>
       <div className="hero-copy">
-        <Reveal>
+        <Reveal from="left">
           <Eyebrow>À NICE & PARTOUT OÙ VOUS ÊTES</Eyebrow>
           <h1>
             {isSkill ? (
@@ -135,7 +135,7 @@ function Hero() {
           </div>
         </Reveal>
       </div>
-      <Reveal className="hero-visual" delay={0.12}>
+      <Reveal className="hero-visual" delay={0.14} from="right">
         <div className="portrait-frame">
           <motion.img
             style={{ y: reduced ? 0 : y }}
@@ -171,9 +171,9 @@ function Hero() {
 function ProjectCompass() {
   const [selected, setSelected] = useState(0);
   return (
-    <section className="project-section" id="projets">
-      <Reveal className="project-layout">
-        <div>
+    <section className="page-scene project-section" id="projets">
+      <div className="project-layout">
+        <Reveal from="left">
           <Eyebrow>VOTRE POINT DE DÉPART</Eyebrow>
           <h2>
             Tout commence
@@ -185,8 +185,8 @@ function ProjectCompass() {
             <br />
             Qu’est-ce qui compte pour vous aujourd’hui ?
           </p>
-        </div>
-        <div className="project-tool">
+        </Reveal>
+        <Reveal className="project-tool" from="right">
           <div
             className="project-options"
             role="group"
@@ -230,8 +230,8 @@ function ProjectCompass() {
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -239,22 +239,25 @@ function ProjectCompass() {
 function Method() {
   const [active, setActive] = useState(0);
   return (
-    <section className="section method" id="methode">
-      <Reveal className="section-heading">
-        <div>
+    <section className="page-scene section method" id="methode">
+      <div className="section-heading">
+        <Reveal from="left">
           <Eyebrow>UNE MÉTHODE, UN CAP</Eyebrow>
           <h2>
             De la première rencontre
             <br />à <em>la suite de votre histoire.</em>
           </h2>
-        </div>
-        <p>
-          Un accompagnement lisible.
-          <br />À chaque étape, vous savez où vous allez.
-        </p>
-      </Reveal>
-      <div
+        </Reveal>
+        <Reveal from="right">
+          <p>
+            Un accompagnement lisible.
+            <br />À chaque étape, vous savez où vous allez.
+          </p>
+        </Reveal>
+      </div>
+      <Reveal
         className="method-tabs"
+        from="left"
         role="tablist"
         aria-label="Les étapes de l’accompagnement"
       >
@@ -284,12 +287,13 @@ function Method() {
             <Arrow />
           </button>
         ))}
-      </div>
-      <div
+      </Reveal>
+      <Reveal
+        className="method-panel"
+        from="right"
         role="tabpanel"
         id={`step-panel-${active}`}
         aria-labelledby={`step-tab-${active}`}
-        className="method-panel"
       >
         <span className="giant-number" aria-hidden="true">
           0{active + 1}
@@ -307,7 +311,7 @@ function Method() {
             <p>{steps[active].detail}</p>
           </motion.div>
         </AnimatePresence>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -320,14 +324,12 @@ function Contact() {
       const match = location.hash.match(/^#contact\?subject=(.+)$/);
       if (match) {
         setSubject(match[1]);
-        document
-          .getElementById("contact")
-          ?.scrollIntoView({
-            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-              .matches
-              ? "instant"
-              : "smooth",
-          });
+        document.getElementById("contact")?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "instant"
+            : "smooth",
+        });
       }
     };
     window.addEventListener("hashchange", update);
@@ -335,9 +337,9 @@ function Contact() {
     return () => window.removeEventListener("hashchange", update);
   }, []);
   return (
-    <section className="contact-section" id="contact">
-      <Reveal className="contact-layout">
-        <div>
+    <section className="page-scene contact-section" id="contact">
+      <div className="contact-layout">
+        <Reveal from="left">
           <Eyebrow>ET SI ON EN PARLAIT ?</Eyebrow>
           <h2>
             Votre prochain chapitre
@@ -364,74 +366,76 @@ function Contact() {
               <span>À Nice ou en visioconférence</span>
             </div>
           </div>
-        </div>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSubmitted(true);
-          }}
-        >
-          <p className="form-heading">
-            Faisons connaissance <Arrow />
-          </p>
-          <div className="form-row">
-            <label>
-              Votre prénom et nom
-              <input
-                name="name"
-                autoComplete="name"
-                placeholder="Camille Martin"
-                required
-              />
-            </label>
-            <label>
-              Votre adresse e-mail
-              <input
-                type="email"
-                name="email"
-                autoComplete="email"
-                placeholder="camille@exemple.fr"
-                required
-              />
-            </label>
-          </div>
-          <label>
-            Ce qui vous amène
-            <select
-              value={subject}
-              onChange={(event) => setSubject(event.target.value)}
-              name="subject"
-            >
-              <option value="">Faisons le point ensemble</option>
-              {services.map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.title}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Votre projet, en quelques mots <span>(facultatif)</span>
-            <textarea
-              name="message"
-              rows={3}
-              placeholder="Une envie, une question, un nouveau départ…"
-            />
-          </label>
-          <button className="button primary" type="submit">
-            Préparer notre échange <Arrow />
-          </button>
-          <p className="form-note">
-            Formulaire de démonstration : aucune donnée n’est envoyée.
-          </p>
-          {submitted && (
-            <p className="form-feedback" role="status">
-              <Check size={20} /> Votre demande est prête. L’envoi sera
-              disponible une fois le service de contact connecté.
+        </Reveal>
+        <Reveal from="right">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSubmitted(true);
+            }}
+          >
+            <p className="form-heading">
+              Faisons connaissance <Arrow />
             </p>
-          )}
-        </form>
-      </Reveal>
+            <div className="form-row">
+              <label>
+                Votre prénom et nom
+                <input
+                  name="name"
+                  autoComplete="name"
+                  placeholder="Camille Martin"
+                  required
+                />
+              </label>
+              <label>
+                Votre adresse e-mail
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  placeholder="camille@exemple.fr"
+                  required
+                />
+              </label>
+            </div>
+            <label>
+              Ce qui vous amène
+              <select
+                value={subject}
+                onChange={(event) => setSubject(event.target.value)}
+                name="subject"
+              >
+                <option value="">Faisons le point ensemble</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Votre projet, en quelques mots <span>(facultatif)</span>
+              <textarea
+                name="message"
+                rows={3}
+                placeholder="Une envie, une question, un nouveau départ…"
+              />
+            </label>
+            <button className="button primary" type="submit">
+              Préparer notre échange <Arrow />
+            </button>
+            <p className="form-note">
+              Formulaire de démonstration : aucune donnée n’est envoyée.
+            </p>
+            {submitted && (
+              <p className="form-feedback" role="status">
+                <Check size={20} /> Votre demande est prête. L’envoi sera
+                disponible une fois le service de contact connecté.
+              </p>
+            )}
+          </form>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -483,30 +487,36 @@ export default function App() {
         <motion.div className="reading-progress" style={{ scaleX }} />
         <Header />
         <main id="main">
-          <Hero />
-          <div className="trust-strip">
-            <span>
-              <MapPin size={17} /> Ancré à Nice, proche de vous
-            </span>
-            <span>
-              <Check size={17} /> Une stratégie à votre mesure
-            </span>
-            <span className="partner">
-              Partenaire de{" "}
-              <strong>
-                PREDICTIS<span className="partner-dot">.</span>
-              </strong>
-            </span>
+          <div className="opening-page">
+            <Hero />
+            <div className="trust-strip">
+              <span>
+                <MapPin size={17} /> Ancré à Nice, proche de vous
+              </span>
+              <span>
+                <Check size={17} /> Une stratégie à votre mesure
+              </span>
+              <span className="partner">
+                Partenaire de{" "}
+                <strong>
+                  PREDICTIS<span className="partner-dot">.</span>
+                </strong>
+              </span>
+            </div>
           </div>
-          <section className="section about" id="approche">
-            <Reveal>
+          <section className="page-scene section about" id="approche">
+            <Reveal from="left">
               <Eyebrow>LE PATRIMOINE EST PERSONNEL. LE CONSEIL AUSSI.</Eyebrow>
-              <div className="about-grid">
+            </Reveal>
+            <div className="about-grid">
+              <Reveal from="left">
                 <h2>
                   Avant de parler de chiffres,
                   <br />
                   parlons <em>de vous.</em>
                 </h2>
+              </Reveal>
+              <Reveal from="right">
                 <div>
                   <p className="intro-text">
                     Un patrimoine, ce n’est pas seulement ce que vous possédez.
@@ -522,8 +532,10 @@ export default function App() {
                     Une autre idée du conseil <Arrow />
                   </a>
                 </div>
-              </div>
-              <div className="values">
+              </Reveal>
+            </div>
+            <Reveal className="values" from="left">
+              <Reveal delay={0.05} from="left">
                 <div>
                   <span>01 /</span>
                   <h3>La clarté, toujours.</h3>
@@ -533,6 +545,8 @@ export default function App() {
                     Le jargon reste à la porte.
                   </p>
                 </div>
+              </Reveal>
+              <Reveal delay={0.12} from="scale">
                 <div>
                   <span>02 /</span>
                   <h3>La relation, d’abord.</h3>
@@ -542,6 +556,8 @@ export default function App() {
                     Et prend le temps de vous écouter.
                   </p>
                 </div>
+              </Reveal>
+              <Reveal delay={0.2} from="right">
                 <div>
                   <span>03 /</span>
                   <h3>Le temps, un allié.</h3>
@@ -551,29 +567,37 @@ export default function App() {
                     Un suivi qui évolue avec votre vie.
                   </p>
                 </div>
-              </div>
+              </Reveal>
             </Reveal>
           </section>
           <ProjectCompass />
-          <section className="section expertise" id="expertises">
-            <Reveal className="section-heading">
-              <div>
-                <Eyebrow>QUATRE EXPERTISES. UNE VISION D’ENSEMBLE.</Eyebrow>
-                <h2>
-                  Votre vie est un tout.
+          <section className="page-scene section expertise" id="expertises">
+            <div className="section-heading">
+              <Reveal from="left">
+                <div>
+                  <Eyebrow>QUATRE EXPERTISES. UNE VISION D’ENSEMBLE.</Eyebrow>
+                  <h2>
+                    Votre vie est un tout.
+                    <br />
+                    <em>Votre patrimoine aussi.</em>
+                  </h2>
+                </div>
+              </Reveal>
+              <Reveal from="right">
+                <p>
+                  Des solutions qui se répondent,
                   <br />
-                  <em>Votre patrimoine aussi.</em>
-                </h2>
-              </div>
-              <p>
-                Des solutions qui se répondent,
-                <br />
-                au service de ce qui compte pour vous.
-              </p>
-            </Reveal>
+                  au service de ce qui compte pour vous.
+                </p>
+              </Reveal>
+            </div>
             <div className="service-grid">
               {services.map((service, i) => (
-                <Reveal key={service.id} delay={i * 0.05}>
+                <Reveal
+                  key={service.id}
+                  delay={i * 0.06}
+                  from={i % 2 === 0 ? "scale" : "up"}
+                >
                   <button
                     className={`service-card service-${i}`}
                     onClick={() => setOverlay({ kind: "service", index: i })}
@@ -592,8 +616,8 @@ export default function App() {
               ))}
             </div>
           </section>
-          <section className="quote-section">
-            <Reveal>
+          <section className="page-scene quote-section">
+            <Reveal from="scale">
               <span className="quote-mark" aria-hidden="true">
                 “
               </span>
@@ -611,58 +635,70 @@ export default function App() {
             </Reveal>
           </section>
           <Method />
-          <section className="partner-section">
-            <Reveal className="partner-layout">
-              <div>
-                <Eyebrow>PROCHE DE VOUS. BIEN ENTOURÉ.</Eyebrow>
-                <h2>
-                  Une relation personnelle.
-                  <br />
-                  <em>La force d’un réseau.</em>
-                </h2>
-              </div>
-              <div>
-                <p>
-                  J’ai choisi de m’appuyer sur Predictis, membre du Groupe
-                  Premium, pour accéder à une sélection de solutions d’épargne,
-                  de retraite et de prévoyance.
-                </p>
-                <p>
-                  Je reste votre interlocuteur pour comprendre vos objectifs,
-                  vous expliquer les choix et vous accompagner dans la durée.
-                </p>
-                <button
-                  className="text-link"
-                  onClick={() => setOverlay({ kind: "legal" })}
-                >
-                  Comprendre ce partenariat <Arrow />
-                </button>
-                <div className="partner-wordmark">
-                  PREDICTIS<span>.</span>
-                  <small>GROUPE PREMIUM</small>
+          <section className="page-scene partner-section">
+            <div className="partner-layout">
+              <Reveal from="left">
+                <div>
+                  <Eyebrow>PROCHE DE VOUS. BIEN ENTOURÉ.</Eyebrow>
+                  <h2>
+                    Une relation personnelle.
+                    <br />
+                    <em>La force d’un réseau.</em>
+                  </h2>
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+              <Reveal from="right">
+                <div>
+                  <p>
+                    J’ai choisi de m’appuyer sur Predictis, membre du Groupe
+                    Premium, pour accéder à une sélection de solutions
+                    d’épargne, de retraite et de prévoyance.
+                  </p>
+                  <p>
+                    Je reste votre interlocuteur pour comprendre vos objectifs,
+                    vous expliquer les choix et vous accompagner dans la durée.
+                  </p>
+                  <button
+                    className="text-link"
+                    onClick={() => setOverlay({ kind: "legal" })}
+                  >
+                    Comprendre ce partenariat <Arrow />
+                  </button>
+                  <div className="partner-wordmark">
+                    PREDICTIS<span>.</span>
+                    <small>GROUPE PREMIUM</small>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
           </section>
-          <section className="section resources" id="ressources">
-            <Reveal className="section-heading">
-              <div>
-                <Eyebrow>QUELQUES REPÈRES POUR AVANCER</Eyebrow>
-                <h2>
-                  Voir plus clair.
+          <section className="page-scene section resources" id="ressources">
+            <div className="section-heading">
+              <Reveal from="left">
+                <div>
+                  <Eyebrow>QUELQUES REPÈRES POUR AVANCER</Eyebrow>
+                  <h2>
+                    Voir plus clair.
+                    <br />
+                    <em>Décider plus sereinement.</em>
+                  </h2>
+                </div>
+              </Reveal>
+              <Reveal from="right">
+                <p>
+                  Des éclairages simples,
                   <br />
-                  <em>Décider plus sereinement.</em>
-                </h2>
-              </div>
-              <p>
-                Des éclairages simples,
-                <br />
-                pour se poser les bonnes questions.
-              </p>
-            </Reveal>
+                  pour se poser les bonnes questions.
+                </p>
+              </Reveal>
+            </div>
             <div className="resource-grid">
               {resources.map((article, i) => (
-                <Reveal key={article.title} delay={i * 0.05}>
+                <Reveal
+                  key={article.title}
+                  delay={i * 0.07}
+                  from={i % 2 === 0 ? "left" : "right"}
+                >
                   <button
                     className="article-card"
                     onClick={() => setOverlay({ kind: "article", index: i })}
@@ -693,45 +729,49 @@ export default function App() {
               ))}
             </div>
           </section>
-          <section className="section faq">
-            <Reveal className="faq-layout">
-              <div>
-                <Eyebrow>EN TOUTE SIMPLICITÉ</Eyebrow>
-                <h2>
-                  Les questions
-                  <br />
-                  <em>que vous vous posez.</em>
-                </h2>
-              </div>
-              <div>
-                {[
-                  [
-                    "À qui s’adresse cet accompagnement ?",
-                    "À celles et ceux qui souhaitent donner une direction à leur patrimoine : un premier projet, une nouvelle étape de vie ou le besoin de faire le point. Nous partons de votre situation, sans présupposé.",
-                  ],
-                  [
-                    "Comment se déroule le premier rendez-vous ?",
-                    "Nous prenons le temps de faire connaissance, de comprendre vos objectifs et de répondre à vos premières questions. Ce premier échange est sans engagement.",
-                  ],
-                  [
-                    "Peut-on échanger à distance ?",
-                    "Oui. L’accompagnement peut se faire à Nice ou en visioconférence, où que vous soyez en France.",
-                  ],
-                  [
-                    "Comment votre conseil est-il rémunéré ?",
-                    "Les modalités de rémunération et les éventuels frais doivent vous être présentés avant tout engagement. Les informations propres à Maël Verré restent à compléter dans la page Transparence avant la mise en ligne définitive.",
-                  ],
-                ].map(([question, answer]) => (
-                  <details key={question}>
-                    <summary>
-                      {question}
-                      <ChevronDown size={18} />
-                    </summary>
-                    <p>{answer}</p>
-                  </details>
-                ))}
-              </div>
-            </Reveal>
+          <section className="page-scene section faq">
+            <div className="faq-layout">
+              <Reveal from="left">
+                <div>
+                  <Eyebrow>EN TOUTE SIMPLICITÉ</Eyebrow>
+                  <h2>
+                    Les questions
+                    <br />
+                    <em>que vous vous posez.</em>
+                  </h2>
+                </div>
+              </Reveal>
+              <Reveal from="right">
+                <div>
+                  {[
+                    [
+                      "À qui s’adresse cet accompagnement ?",
+                      "À celles et ceux qui souhaitent donner une direction à leur patrimoine : un premier projet, une nouvelle étape de vie ou le besoin de faire le point. Nous partons de votre situation, sans présupposé.",
+                    ],
+                    [
+                      "Comment se déroule le premier rendez-vous ?",
+                      "Nous prenons le temps de faire connaissance, de comprendre vos objectifs et de répondre à vos premières questions. Ce premier échange est sans engagement.",
+                    ],
+                    [
+                      "Peut-on échanger à distance ?",
+                      "Oui. L’accompagnement peut se faire à Nice ou en visioconférence, où que vous soyez en France.",
+                    ],
+                    [
+                      "Comment votre conseil est-il rémunéré ?",
+                      "Les modalités de rémunération et les éventuels frais doivent vous être présentés avant tout engagement. Les informations propres à Maël Verré restent à compléter dans la page Transparence avant la mise en ligne définitive.",
+                    ],
+                  ].map(([question, answer]) => (
+                    <details key={question}>
+                      <summary>
+                        {question}
+                        <ChevronDown size={18} />
+                      </summary>
+                      <p>{answer}</p>
+                    </details>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
           </section>
           <Contact />
         </main>

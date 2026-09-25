@@ -1721,6 +1721,609 @@ dialog::backdrop {
     font-size: 15px;
   }
 }
+
+/* Chaque scene occupe un ecran. Le header et le blanc partagent la meme grille vh. */
+:root {
+  --header-height: 85px;
+  --scene-gap: 7svh;
+}
+.header {
+  height: var(--header-height);
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.opening-page {
+  height: calc(100svh - var(--header-height) - var(--scene-gap));
+  margin-bottom: var(--scene-gap);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.opening-page .hero {
+  min-height: 0;
+  height: auto;
+  flex: 1;
+  padding-top: clamp(16px, 3svh, 38px);
+  padding-bottom: clamp(14px, 2svh, 22px);
+}
+.opening-page .portrait-index {
+  bottom: 0;
+}
+.opening-page .trust-strip {
+  flex: 0 0 auto;
+  min-height: clamp(50px, 7svh, 66px);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+section.page-scene {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: calc(100svh - var(--scene-gap));
+  min-height: calc(100svh - var(--scene-gap));
+  margin-top: 0;
+  margin-bottom: var(--scene-gap);
+  padding-top: calc(var(--header-height) + clamp(12px, 2svh, 24px));
+  padding-bottom: clamp(18px, 3svh, 34px);
+  justify-content: center;
+}
+section.page-scene.section {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+section.page-scene .section-heading {
+  margin-bottom: clamp(20px, 3.5svh, 38px);
+}
+section.page-scene .section-heading > p {
+  max-width: 330px;
+}
+section.page-scene .project-layout,
+section.page-scene .partner-layout,
+section.page-scene .faq-layout,
+section.page-scene .contact-layout {
+  width: min(100%, 1240px);
+}
+section.page-scene .project-tool {
+  min-height: min(290px, 34svh);
+}
+section.page-scene .service-grid {
+  flex: 0 1 auto;
+}
+section.page-scene .service-card {
+  min-height: 0;
+  height: clamp(205px, 33svh, 295px);
+}
+section.page-scene .card-top {
+  margin-bottom: clamp(15px, 3svh, 28px);
+}
+section.page-scene .article-art {
+  height: clamp(100px, 17svh, 165px);
+}
+section.page-scene .resource-grid {
+  gap: clamp(14px, 2.2vw, 28px);
+}
+section.page-scene .article-meta {
+  margin: 12px 0 8px;
+}
+section.page-scene .article-card .text-link {
+  margin-top: 8px;
+}
+section.page-scene .method-panel {
+  min-height: clamp(190px, 29svh, 280px);
+}
+section.page-scene .faq-layout {
+  align-items: center;
+}
+section.page-scene .faq details > summary {
+  padding-block: clamp(12px, 2.1svh, 20px);
+}
+section.page-scene .faq details > p {
+  padding-bottom: 14px;
+}
+section.page-scene.quote-section {
+  align-items: center;
+}
+section.page-scene.quote-section > div {
+  width: min(100%, 1000px);
+}
+section.page-scene.contact-section {
+  height: 83svh;
+  min-height: 83svh;
+  margin-bottom: 0;
+  padding-bottom: 2svh;
+}
+footer {
+  box-sizing: border-box;
+  height: 10svh;
+  margin-bottom: 7svh;
+  padding: 5px var(--gutter);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+footer .footer-top {
+  padding-bottom: 4px;
+}
+footer .footer-brand {
+  font-size: 22px;
+}
+footer .footer-brand > span,
+footer .footer-top > p {
+  display: none;
+}
+footer .footer-bottom {
+  padding-top: 4px;
+  gap: 8px;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --header-height: 77px;
+  }
+  section.page-scene .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  section.page-scene .service-card {
+    height: clamp(195px, 27svh, 250px);
+    padding: 18px 20px;
+  }
+  section.page-scene .card-top {
+    margin-bottom: 10px;
+  }
+  section.page-scene .service-card h3 {
+    font-size: clamp(20px, 2.5vw, 25px);
+    margin-bottom: 7px;
+  }
+  section.page-scene .service-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 9px;
+  }
+  section.page-scene .card-bottom {
+    padding-top: 8px;
+  }
+}
+@media (max-width: 560px) {
+  :root {
+    --header-height: 77px;
+    --scene-gap: 6svh;
+  }
+  .opening-page {
+    height: calc(100svh - var(--header-height) - var(--scene-gap));
+  }
+  .opening-page .hero {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: clamp(8px, 1.7svh, 15px);
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .opening-page .hero h1 {
+    font-size: clamp(36px, 10vw, 46px);
+    line-height: 1.02;
+    margin-bottom: 10px;
+  }
+  .opening-page .hero .eyebrow {
+    margin-bottom: 9px;
+  }
+  .opening-page .hero-description {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .opening-page .hero-actions {
+    margin-top: 12px;
+    gap: 8px 16px;
+  }
+  .opening-page .hero-actions .button {
+    min-height: 42px;
+    padding: 10px 14px;
+  }
+  .opening-page .hero-actions .text-link {
+    font-size: 11px;
+  }
+  .opening-page .hero-note {
+    margin-top: 7px;
+    font-size: 10px;
+  }
+  .opening-page .hero-visual {
+    min-height: 0;
+    margin: 0 12px 0 0;
+  }
+  .opening-page .portrait-frame {
+    height: clamp(118px, 24svh, 175px);
+    aspect-ratio: auto;
+  }
+  .opening-page .portrait-frame img {
+    height: 160%;
+    top: -8%;
+    object-position: 50% 32%;
+  }
+  .opening-page .portrait-caption {
+    left: 13px;
+    bottom: 10px;
+  }
+  .opening-page .portrait-caption strong {
+    margin: 2px 0;
+    font-size: 19px;
+  }
+  .opening-page .portrait-caption > span,
+  .opening-page .portrait-caption p {
+    font-size: 9px;
+  }
+  .opening-page .portrait-corner {
+    right: 10px;
+    bottom: 11px;
+  }
+  .opening-page .location-tag {
+    top: 8px;
+    right: -8px;
+    padding: 7px 9px;
+  }
+  .opening-page .portrait-index {
+    display: none;
+  }
+  .opening-page .trust-strip {
+    min-height: 0;
+    padding: 7px var(--gutter);
+    gap: 3px 12px;
+    font-size: 10px;
+  }
+  .opening-page .trust-strip > span {
+    gap: 5px;
+  }
+  .opening-page .trust-strip svg {
+    width: 13px;
+    height: 13px;
+  }
+  .opening-page .trust-strip .partner {
+    width: auto;
+    border: 0;
+    padding: 0;
+  }
+  section.page-scene {
+    padding-top: calc(var(--header-height) + 1.5svh);
+    padding-bottom: 1.5svh;
+  }
+  section.page-scene.section {
+    padding-top: calc(var(--header-height) + 1.5svh);
+    padding-bottom: 1.5svh;
+  }
+  section.page-scene .section-heading {
+    margin-bottom: 2svh;
+  }
+  section.page-scene .section-heading > p {
+    margin-top: 9px;
+  }
+  section.page-scene.section .about-grid {
+    gap: 12px;
+  }
+  section.page-scene.about .intro-text {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  section.page-scene.about .about-grid p:not(.intro-text) {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  section.page-scene.about .about-grid .text-link {
+    margin-top: 5px;
+  }
+  section.page-scene.about .values {
+    margin-top: 12px;
+    padding-top: 8px;
+    gap: 8px;
+  }
+  section.page-scene.about .values > div {
+    padding: 8px 8px 8px 34px;
+  }
+  section.page-scene.about .values > div > span {
+    margin-bottom: 2px;
+  }
+  section.page-scene.about .values h3 {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  section.page-scene.about .values p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  section.page-scene.project-section {
+    padding-inline: var(--gutter);
+  }
+  section.page-scene .project-layout {
+    gap: 10px;
+  }
+  section.page-scene .project-layout > div > p:not(.eyebrow) {
+    margin-top: 7px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  section.page-scene .project-tool {
+    grid-template-columns: 1fr 0.8fr;
+    min-height: 0;
+  }
+  section.page-scene .project-options {
+    padding: 3px 10px;
+  }
+  section.page-scene .project-options button {
+    min-height: 41px;
+    padding: 6px 2px;
+    font-size: 12px;
+  }
+  section.page-scene .project-result {
+    padding: 13px;
+  }
+  section.page-scene .project-result h3 {
+    margin: 8px 0 5px;
+    font-size: 19px;
+  }
+  section.page-scene .project-result p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  section.page-scene .project-result .text-link {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+  section.page-scene.expertise .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  section.page-scene.expertise .service-card {
+    height: clamp(168px, 26svh, 215px);
+    min-height: 0;
+    padding: 11px;
+  }
+  section.page-scene.expertise .card-top {
+    margin-bottom: 5px;
+  }
+  section.page-scene.expertise .card-top > svg {
+    width: 21px;
+    height: 21px;
+  }
+  section.page-scene.expertise .card-top > span {
+    font-size: 9px;
+  }
+  section.page-scene.expertise .service-card h3 {
+    font-size: 17px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  section.page-scene.expertise .service-card p {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  section.page-scene.expertise .card-bottom {
+    font-size: 11px;
+    padding-top: 4px;
+  }
+  section.page-scene.quote-section {
+    padding-inline: var(--gutter);
+  }
+  section.page-scene.quote-section blockquote {
+    font-size: clamp(24px, 6vw, 30px);
+    line-height: 1.28;
+    margin-bottom: 16px;
+  }
+  section.page-scene.quote-section blockquote br {
+    display: none;
+  }
+  section.page-scene .method-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  section.page-scene .method-tabs button {
+    min-height: 46px;
+    padding: 6px;
+    gap: 6px;
+  }
+  section.page-scene .method-tabs strong {
+    font-size: 11px;
+  }
+  section.page-scene .method-tabs button > svg {
+    display: none;
+  }
+  section.page-scene .method-panel {
+    min-height: 0;
+    padding: 13px;
+    gap: 12px;
+    margin-top: 9px;
+  }
+  section.page-scene .method-panel .giant-number {
+    font-size: 49px;
+  }
+  section.page-scene .method-panel h3 {
+    font-size: 19px;
+    margin-bottom: 7px;
+  }
+  section.page-scene .method-panel > div > p:last-child {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  section.page-scene .partner-layout {
+    gap: 10px;
+  }
+  section.page-scene .partner-layout > div > p:not(.eyebrow) {
+    margin-bottom: 7px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  section.page-scene .partner-wordmark {
+    margin-top: 10px;
+    font-size: 23px;
+  }
+  section.page-scene.resources .resource-grid {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+  section.page-scene.resources .article-card {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    column-gap: 10px;
+    align-items: center;
+  }
+  section.page-scene.resources .article-art {
+    height: 64px;
+    grid-row: span 3;
+  }
+  section.page-scene.resources .art-circle {
+    width: 48px;
+    height: 48px;
+    right: -3px;
+    bottom: -10px;
+  }
+  section.page-scene.resources .art-line,
+  section.page-scene.resources .art-label {
+    display: none;
+  }
+  section.page-scene.resources .art-index {
+    font-size: 25px;
+    left: 7px;
+    bottom: 0;
+  }
+  section.page-scene.resources .article-meta {
+    margin: 0;
+    font-size: 9px;
+  }
+  section.page-scene.resources .article-card h3 {
+    font-size: 15px;
+    line-height: 1.15;
+  }
+  section.page-scene.resources .article-card .text-link {
+    margin: 0;
+    font-size: 10px;
+    padding: 2px 0;
+  }
+  section.page-scene.faq .faq-layout {
+    gap: 10px;
+  }
+  section.page-scene.faq details > summary {
+    padding-block: 9px;
+    font-size: 13px;
+  }
+  section.page-scene.faq details > p {
+    padding-bottom: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  section.page-scene.contact-section {
+    height: 83svh;
+    min-height: 83svh;
+    padding-top: calc(var(--header-height) + 1svh);
+  }
+  section.page-scene.contact-section .contact-layout {
+    gap: 9px;
+  }
+  section.page-scene.contact-section .contact-layout h2 {
+    font-size: 28px;
+    line-height: 1.05;
+  }
+  section.page-scene.contact-section .contact-layout > div > p:not(.eyebrow) {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  section.page-scene.contact-section .contact-person {
+    margin-top: 7px;
+    gap: 8px;
+  }
+  section.page-scene.contact-section .contact-person img {
+    width: 32px;
+    height: 32px;
+  }
+  section.page-scene.contact-section .contact-person strong {
+    font-size: 12px;
+  }
+  section.page-scene.contact-section .contact-person span {
+    font-size: 10px;
+  }
+  section.page-scene.contact-section form {
+    padding: 11px 13px;
+  }
+  section.page-scene.contact-section .form-heading {
+    margin-bottom: 6px;
+    font-size: 19px;
+  }
+  section.page-scene.contact-section label {
+    margin-bottom: 5px;
+    font-size: 11px;
+  }
+  section.page-scene.contact-section input,
+  section.page-scene.contact-section select,
+  section.page-scene.contact-section textarea {
+    min-height: 32px;
+    margin-top: 1px;
+    padding: 4px 7px;
+    font-size: 13px;
+  }
+  section.page-scene.contact-section textarea {
+    height: 43px;
+  }
+  section.page-scene.contact-section form > .button {
+    min-height: 38px;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  section.page-scene.contact-section .form-note {
+    margin-top: 4px;
+    font-size: 10px;
+  }
+  footer {
+    min-height: 0;
+    padding-inline: 12px;
+  }
+  footer .footer-top {
+    display: none;
+  }
+  footer .footer-bottom {
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  footer .footer-bottom button {
+    min-height: 40px;
+  }
+  footer .footer-brand {
+    font-size: 17px;
+  }
+  footer .footer-bottom {
+    font-size: 8px;
+  }
+  footer .footer-bottom > div {
+    gap: 7px;
+  }
+  footer .footer-bottom button {
+    min-height: 24px;
+    font-size: 8px;
+  }
+}
+@media (max-height: 700px) and (min-width: 561px) {
+  :root {
+    --scene-gap: 5svh;
+  }
+  .opening-page .hero {
+    gap: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .opening-page .hero h1 {
+    font-size: clamp(42px, 5vw, 62px);
+  }
+  .opening-page .hero-visual .portrait-frame {
+    max-height: 58svh;
+  }
+  section.page-scene {
+    padding-top: calc(var(--header-height) + 1svh);
+    padding-bottom: 1.5svh;
+  }
+  section.page-scene .section-heading {
+    margin-bottom: 2svh;
+  }
+  section.page-scene .service-card {
+    height: 26svh;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,6 +1,6 @@
 # Maël Verré — conseil en gestion de patrimoine
 
-Site vitrine réalisé avec React, TypeScript et Vite.
+Site vitrine réalisé avec React, TypeScript et Vite. La navigation suit un rythme de scènes verticales : ouverture d’un écran, puis sections calibrées sur `svh` avec un intervalle de respiration de 7 % de l’écran. Les animations d’entrée et de sortie varient selon l’élément et le sens du défilement.
 
 ## Développement local
 
