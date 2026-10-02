@@ -3561,9 +3561,33 @@ section.page-scene:not(.contact-section) {
   padding-bottom: max(var(--scene-air), 22px) !important;
 }
 
+@media (min-width: 801px) {
+  section.page-scene.expertise .service-grid {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    grid-template-rows: none !important;
+    overflow: visible;
+  }
+  section.page-scene.expertise .service-grid > div {
+    display: flex;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+  section.page-scene.expertise .service-card {
+    flex: 1 1 auto;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+  section.page-scene.expertise .card-bottom {
+    margin-top: auto;
+  }
+}
+
 @media (max-width: 800px) {
   section.page-scene:not(.contact-section):not(.quote-section) {
-    justify-content: flex-start !important;
+    justify-content: center !important;
   }
   section.page-scene.expertise .service-grid {
     flex: 0 0 auto !important;
