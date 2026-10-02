@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import {
   Arrow,
-  Eyebrow,
   Modal,
   Reveal,
   ScrollDirectionContext,
@@ -90,7 +89,6 @@ function Hero() {
     <section className="hero" id="accueil" ref={target}>
       <div className="hero-copy">
         <Reveal from="left">
-          <Eyebrow>À NICE & PARTOUT OÙ VOUS ÊTES</Eyebrow>
           <h1>
             {isSkill ? (
               <>
@@ -123,10 +121,6 @@ function Hero() {
               Découvrir mon approche <ArrowDown size={16} />
             </a>
           </div>
-          <div className="hero-note">
-            <span className="status-dot" /> Un premier échange, simplement. Sans
-            engagement.
-          </div>
         </Reveal>
       </div>
       <Reveal className="hero-visual" delay={0.14} from="right">
@@ -155,9 +149,6 @@ function Hero() {
         </div>
         <div className="portrait-index">01 — UNE RELATION AVANT TOUT</div>
       </Reveal>
-      <a className="scroll-cue" href="#approche">
-        <ArrowDown size={15} /> PRENDRE LE TEMPS DE VOIR PLUS LOIN
-      </a>
     </section>
   );
 }
@@ -168,7 +159,6 @@ function Method() {
     <section className="page-scene section method" id="methode">
       <div className="section-heading">
         <Reveal from="left">
-          <Eyebrow>UNE MÉTHODE, UN CAP</Eyebrow>
           <h2>
             De la première rencontre
             <br />à <em>la suite de votre histoire.</em>
@@ -255,7 +245,6 @@ function Contact({
     <section className="page-scene contact-section" id="contact">
       <div className="contact-layout">
         <Reveal from="left">
-          <Eyebrow>ET SI ON EN PARLAIT ?</Eyebrow>
           <h2>Votre prochain chapitre<br />commence par<br /><em>une conversation.</em></h2>
           <p>Un temps pour faire connaissance, poser vos questions et regarder ensemble ce qui est possible.</p>
           <div className="contact-person">
@@ -431,7 +420,7 @@ export default function App() {
             <Hero />
             <div className="trust-strip">
               <span>
-                <MapPin size={17} /> Ancré à Nice, proche de vous
+                <MapPin size={17} /> Ancré à Nice, disponible partout
               </span>
               <span>
                 <Check size={17} /> Une stratégie à votre mesure
@@ -454,9 +443,6 @@ export default function App() {
             </div>
           </div>
           <section className="page-scene section about" id="approche">
-            <Reveal from="left">
-              <Eyebrow>LE PATRIMOINE EST PERSONNEL. LE CONSEIL AUSSI.</Eyebrow>
-            </Reveal>
             <div className="about-grid">
               <Reveal from="left">
                 <h2>
@@ -523,7 +509,6 @@ export default function App() {
             <div className="section-heading">
               <Reveal from="left">
                 <div>
-                  <Eyebrow>QUATRE EXPERTISES. UNE VISION D’ENSEMBLE.</Eyebrow>
                   <h2>
                     Votre vie est un tout.
                     <br />
@@ -589,7 +574,6 @@ export default function App() {
             <div className="faq-layout">
               <Reveal from="left">
                 <div>
-                  <Eyebrow>EN TOUTE SIMPLICITÉ</Eyebrow>
                   <h2>
                     Les questions
                     <br />
