@@ -39,7 +39,7 @@ export function Reveal({
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { amount: 0.12, once: false });
+  const inView = useInView(ref, { amount: 0.25, margin: "0px 0px -12% 0px", once: false });
   const direction = useContext(ScrollDirectionContext);
   const controls = useAnimationControls();
   const hiddenState = (scrollDirection: number) => {
@@ -63,12 +63,12 @@ export function Reveal({
         x: 0,
         y: 0,
         scale: 1,
-        transition: { duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.92, delay, ease: [0.22, 1, 0.36, 1] },
       });
     } else {
       controls.start({
         ...hiddenState(direction?.current ?? 1),
-        transition: { duration: 0.24, ease: [0.4, 0, 1, 1] },
+        transition: { duration: 0.42, ease: [0.4, 0, 1, 1] },
       });
     }
   }, [controls, delay, direction, from, inView, reduced]);
@@ -99,14 +99,17 @@ export function Eyebrow({ children }: { children: ReactNode }) {
     </p>
   );
 }
+
 export function Modal({
   title,
   children,
   onClose,
+  className = "",
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
+  className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -124,6 +127,7 @@ export function Modal({
   return (
     <dialog
       ref={ref}
+      className={className}
       aria-labelledby="dialog-title"
       onCancel={onClose}
       onClick={(event) => {

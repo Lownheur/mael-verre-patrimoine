@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import {
   AnimatePresence,
   motion,
@@ -14,9 +14,7 @@ import {
   ChevronDown,
   MapPin,
   Menu,
-  Plus,
   X,
-  Compass,
   MoveUpRight,
 } from "lucide-react";
 import {
@@ -26,16 +24,16 @@ import {
   Reveal,
   ScrollDirectionContext,
 } from "./components";
-import { resources, services, steps } from "./content";
+import { services, steps } from "./content";
 import { variant } from "./config";
 
 type Overlay =
-  | { kind: "service" | "article"; index: number }
+  | { kind: "service"; index: number }
   | { kind: "legal" | "privacy" }
   | null;
 const isSkill = variant === "skill";
 
-function Header() {
+function Header({ onContact }: { onContact: () => void }) {
   const [open, setOpen] = useState(false);
   return (
     <header className="header">
@@ -61,17 +59,13 @@ function Header() {
         <a href="#methode" onClick={() => setOpen(false)}>
           La méthode
         </a>
-        <a href="#ressources" onClick={() => setOpen(false)}>
-          Les éclairages
-        </a>
-        <a
-          className="button nav-cta"
-          href="#contact"
-          onClick={() => setOpen(false)}
-        >
+        <button className="button nav-cta" onClick={() => { setOpen(false); onContact(); }}>
           Faisons connaissance <Arrow />
-        </a>
+        </button>
       </nav>
+      <button className="button mobile-contact-cta" onClick={onContact}>
+        Prendre RDV <Arrow />
+      </button>
       <button
         className="icon-button menu-toggle"
         aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
@@ -168,74 +162,6 @@ function Hero() {
   );
 }
 
-function ProjectCompass() {
-  const [selected, setSelected] = useState(0);
-  return (
-    <section className="page-scene project-section" id="projets">
-      <div className="project-layout">
-        <Reveal from="left">
-          <Eyebrow>VOTRE POINT DE DÉPART</Eyebrow>
-          <h2>
-            Tout commence
-            <br />
-            par <em>un projet.</em>
-          </h2>
-          <p>
-            Pas besoin d’avoir toutes les réponses.
-            <br />
-            Qu’est-ce qui compte pour vous aujourd’hui ?
-          </p>
-        </Reveal>
-        <Reveal className="project-tool" from="right">
-          <div
-            className="project-options"
-            role="group"
-            aria-label="Choisir votre priorité"
-          >
-            {[
-              "Faire grandir mon épargne",
-              "Préparer ma retraite",
-              "Protéger mes proches",
-              "Investir dans l’immobilier",
-            ].map((label, i) => (
-              <button
-                key={label}
-                aria-pressed={selected === i}
-                onClick={() => setSelected(i)}
-              >
-                <span className="option-number">0{i + 1}</span>
-                {label}
-                {selected === i ? <Check size={17} /> : <Plus size={17} />}
-              </button>
-            ))}
-          </div>
-          <div className="project-result" aria-live="polite">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selected}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-              >
-                <Compass size={28} strokeWidth={1.25} aria-hidden="true" />
-                <h3>{services[selected].short}</h3>
-                <p>{services[selected].focus}</p>
-                <a
-                  className="text-link"
-                  href={`#contact?subject=${services[selected].id}`}
-                >
-                  En parlons-nous ? <Arrow />
-                </a>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function Method() {
   const [active, setActive] = useState(0);
   return (
@@ -316,146 +242,134 @@ function Method() {
   );
 }
 
-function Contact() {
-  const [subject, setSubject] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  useEffect(() => {
-    const update = () => {
-      const match = location.hash.match(/^#contact\?subject=(.+)$/);
-      if (match) {
-        setSubject(match[1]);
-        document.getElementById("contact")?.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-            .matches
-            ? "instant"
-            : "smooth",
-        });
-      }
-    };
-    window.addEventListener("hashchange", update);
-    update();
-    return () => window.removeEventListener("hashchange", update);
-  }, []);
+function Contact({
+  onContact,
+  onLegal,
+  onPrivacy,
+}: {
+  onContact: () => void;
+  onLegal: () => void;
+  onPrivacy: () => void;
+}) {
   return (
     <section className="page-scene contact-section" id="contact">
       <div className="contact-layout">
         <Reveal from="left">
           <Eyebrow>ET SI ON EN PARLAIT ?</Eyebrow>
-          <h2>
-            Votre prochain chapitre
-            <br />
-            commence par
-            <br />
-            <em>une conversation.</em>
-          </h2>
-          <p>
-            Un temps pour faire connaissance, poser vos questions
-            <br className="desktop-break" /> et regarder ensemble ce qui est
-            possible.
-          </p>
+          <h2>Votre prochain chapitre<br />commence par<br /><em>une conversation.</em></h2>
+          <p>Un temps pour faire connaissance, poser vos questions et regarder ensemble ce qui est possible.</p>
           <div className="contact-person">
-            <img
-              src="/portrait.jpg"
-              width="60"
-              height="60"
-              loading="lazy"
-              alt=""
-            />
-            <div>
-              <strong>Maël Verré</strong>
-              <span>À Nice ou en visioconférence</span>
-            </div>
+            <img src="/portrait.jpg" width="72" height="72" loading="lazy" alt="" />
+            <div><strong>Maël Verré</strong><span>À Nice ou en visioconférence</span></div>
           </div>
         </Reveal>
         <Reveal from="right">
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSubmitted(true);
-            }}
-          >
-            <p className="form-heading">
-              Faisons connaissance <Arrow />
-            </p>
-            <div className="form-row">
-              <label>
-                Votre prénom et nom
-                <input
-                  name="name"
-                  autoComplete="name"
-                  placeholder="Camille Martin"
-                  required
-                />
-              </label>
-              <label>
-                Votre adresse e-mail
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="camille@exemple.fr"
-                  required
-                />
-              </label>
-            </div>
-            <label>
-              Ce qui vous amène
-              <select
-                value={subject}
-                onChange={(event) => setSubject(event.target.value)}
-                name="subject"
-              >
-                <option value="">Faisons le point ensemble</option>
-                {services.map((service) => (
-                  <option key={service.id} value={service.id}>
-                    {service.title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Votre projet, en quelques mots <span>(facultatif)</span>
-              <textarea
-                name="message"
-                rows={3}
-                placeholder="Une envie, une question, un nouveau départ…"
-              />
-            </label>
-            <button className="button primary" type="submit">
-              Préparer notre échange <Arrow />
-            </button>
-            <p className="form-note">
-              Formulaire de démonstration : aucune donnée n’est envoyée.
-            </p>
-            {submitted && (
-              <p className="form-feedback" role="status">
-                <Check size={20} /> Votre demande est prête. L’envoi sera
-                disponible une fois le service de contact connecté.
-              </p>
-            )}
-          </form>
+          <div className="contact-booking-card">
+            <p className="form-heading">Faisons connaissance <Arrow /></p>
+            <p>Choisissez directement un créneau pour un premier échange, à Nice ou en visioconférence.</p>
+            <button className="button primary" type="button" onClick={onContact}>Prendre un rendez-vous <Arrow /></button>
+            <p className="form-note">Premier échange sans engagement.</p>
+          </div>
         </Reveal>
       </div>
+      <footer>
+        <div className="footer-top">
+          <a href="#accueil" className="footer-brand">
+            Maël Verré<span>Le patrimoine, à votre mesure.</span>
+          </a>
+          <p>
+            Conseil en gestion de patrimoine
+            <br />
+            Nice · France entière à distance
+          </p>
+          <a href="#accueil" className="back-top">
+            Revenir en haut <Arrow />
+          </a>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Maël Verré</span>
+          <div>
+            <button type="button" onClick={onLegal}>
+              Mentions légales & transparence
+            </button>
+            <button type="button" onClick={onPrivacy}>
+              Confidentialité
+            </button>
+          </div>
+          <span>Avec attention, pour demain.</span>
+        </div>
+      </footer>
     </section>
   );
 }
 
+function CalBooking({ session, onBooked }: { session: number; onBooked: () => void }) {
+  // Recharge le calendrier après une réservation pour retirer le créneau pris.
+  const bookingUrl = import.meta.env.VITE_CALCOM_URL?.trim();
+  const booked = useRef(false);
+  const [confirmed, setConfirmed] = useState(false);
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (!/^https:\/\/([a-z0-9-]+\.)?cal\.com$/.test(event.origin)) return;
+      const data = event.data;
+      const type = data && typeof data === "object" ? String((data as { type?: string }).type || "") : "";
+      if (!booked.current && /bookingSuccessful/i.test(type)) {
+        booked.current = true;
+        setConfirmed(true);
+        onBooked();
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [onBooked]);
+  if (!bookingUrl) {
+    return (
+      <div className="cal-missing" role="status">
+        <p>La réservation en ligne sera disponible dès que l’adresse de votre agenda Cal.com aura été configurée.</p>
+        <p>Pour terminer : renseignez <code>VITE_CALCOM_URL</code> avec votre lien Cal.com (par exemple <code>https://cal.com/votre-compte/premier-echange</code>), puis redémarrez le site.</p>
+      </div>
+    );
+  }
+  let url: URL;
+  try {
+    url = new URL(bookingUrl);
+  } catch {
+    return <p className="cal-missing" role="alert">Le lien Cal.com configuré n’est pas une URL valide.</p>;
+  }
+  if (!/^(cal\.com|www\.cal\.com)$/.test(url.hostname)) {
+    return <p className="cal-missing" role="alert">L’adresse configurée doit être un lien public hébergé sur cal.com.</p>;
+  }
+  url.searchParams.set("embed", "true");
+  return (
+    <>
+      {confirmed && <p className="booking-confirmed" role="status">Rendez-vous confirmé. Ce créneau n’est plus proposé.</p>}
+      <iframe key={session} className="cal-embed" src={url.toString()} title="Réserver un rendez-vous avec Maël Verré" referrerPolicy="strict-origin-when-cross-origin" />
+    </>
+  );
+}
 export default function App() {
   const [overlay, setOverlay] = useState<Overlay>(null);
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingSession, setBookingSession] = useState(0);
   const reduced = useReducedMotion();
   const scrollDirection = useRef(1);
+  const lenisRef = useRef<Lenis | null>(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
   useEffect(() => {
     if (reduced) return;
     const lenis = new Lenis({
       autoRaf: true,
-      anchors: { offset: -100 },
-      duration: 0.95,
+      anchors: false,
+      duration: 1.15,
       smoothWheel: true,
       prevent: (node) => node.tagName === "DIALOG",
     });
-    return () => lenis.destroy();
+    lenisRef.current = lenis;
+    return () => {
+      lenisRef.current = null;
+      lenis.destroy();
+    };
   }, [reduced]);
 
   useEffect(() => {
@@ -478,16 +392,42 @@ export default function App() {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
+  const handleAnchorClick = (event: MouseEvent<HTMLDivElement>) => {
+    const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>("a[href^='#']");
+    if (!anchor || anchor.getAttribute("aria-disabled") === "true") return;
+    const href = anchor.getAttribute("href");
+    if (!href) return;
+    const id = href.slice(1).split("?")[0];
+    if (id === "contact") {
+      event.preventDefault();
+      setBookingSession((session) => session + 1);
+      setBookingOpen(true);
+      return;
+    }
+    const target = id === "main" || id === "accueil"
+      ? document.querySelector<HTMLElement>(".opening-page")
+      : document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    if (window.location.hash !== href) {
+      window.history.pushState(null, "", href);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    }
+    const top = target.getBoundingClientRect().top + window.scrollY + target.offsetHeight / 2 - window.innerHeight / 2;
+    if (reduced) window.scrollTo({ top, behavior: "instant" });
+    else if (lenisRef.current) lenisRef.current.scrollTo(top, { duration: 1.2 });
+    else window.scrollTo({ top, behavior: "smooth" });
+  };
   return (
     <ScrollDirectionContext.Provider value={scrollDirection}>
-      <>
+      <div className="app-shell" onClick={handleAnchorClick}>
         <a className="skip-link" href="#main">
           Aller au contenu
         </a>
         <motion.div className="reading-progress" style={{ scaleX }} />
-        <Header />
+        <Header onContact={() => { setBookingSession((session) => session + 1); setBookingOpen(true); }} />
         <main id="main">
-          <div className="opening-page">
+          <div className="opening-page" id="page-home">
             <Hero />
             <div className="trust-strip">
               <span>
@@ -497,10 +437,19 @@ export default function App() {
                 <Check size={17} /> Une stratégie à votre mesure
               </span>
               <span className="partner">
-                Partenaire de{" "}
-                <strong>
-                  PREDICTIS<span className="partner-dot">.</span>
-                </strong>
+                <span>
+                  Partenaire de{" "}
+                  <strong>
+                    PREDICTIS<span className="partner-dot">.</span>
+                  </strong>
+                </span>
+                <button
+                  type="button"
+                  className="partner-more"
+                  onClick={() => setOverlay({ kind: "legal" })}
+                >
+                  En savoir plus
+                </button>
               </span>
             </div>
           </div>
@@ -534,8 +483,8 @@ export default function App() {
                 </div>
               </Reveal>
             </div>
-            <Reveal className="values" from="left">
-              <Reveal delay={0.05} from="left">
+            <div className="values">
+              <Reveal delay={0.08} from="left">
                 <div>
                   <span>01 /</span>
                   <h3>La clarté, toujours.</h3>
@@ -546,7 +495,7 @@ export default function App() {
                   </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.12} from="scale">
+              <Reveal delay={0.2} from="scale">
                 <div>
                   <span>02 /</span>
                   <h3>La relation, d’abord.</h3>
@@ -557,7 +506,7 @@ export default function App() {
                   </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.2} from="right">
+              <Reveal delay={0.32} from="right">
                 <div>
                   <span>03 /</span>
                   <h3>Le temps, un allié.</h3>
@@ -568,9 +517,8 @@ export default function App() {
                   </p>
                 </div>
               </Reveal>
-            </Reveal>
+            </div>
           </section>
-          <ProjectCompass />
           <section className="page-scene section expertise" id="expertises">
             <div className="section-heading">
               <Reveal from="left">
@@ -595,8 +543,8 @@ export default function App() {
               {services.map((service, i) => (
                 <Reveal
                   key={service.id}
-                  delay={i * 0.06}
-                  from={i % 2 === 0 ? "scale" : "up"}
+                  delay={i * 0.12}
+                  from="up"
                 >
                   <button
                     className={`service-card service-${i}`}
@@ -615,8 +563,9 @@ export default function App() {
                 </Reveal>
               ))}
             </div>
+
           </section>
-          <section className="page-scene quote-section">
+          <section className="page-scene quote-section" id="citation">
             <Reveal from="scale">
               <span className="quote-mark" aria-hidden="true">
                 “
@@ -633,103 +582,10 @@ export default function App() {
                 <span>VOTRE CONSEILLER, DANS LA DURÉE</span>
               </div>
             </Reveal>
+
           </section>
           <Method />
-          <section className="page-scene partner-section">
-            <div className="partner-layout">
-              <Reveal from="left">
-                <div>
-                  <Eyebrow>PROCHE DE VOUS. BIEN ENTOURÉ.</Eyebrow>
-                  <h2>
-                    Une relation personnelle.
-                    <br />
-                    <em>La force d’un réseau.</em>
-                  </h2>
-                </div>
-              </Reveal>
-              <Reveal from="right">
-                <div>
-                  <p>
-                    J’ai choisi de m’appuyer sur Predictis, membre du Groupe
-                    Premium, pour accéder à une sélection de solutions
-                    d’épargne, de retraite et de prévoyance.
-                  </p>
-                  <p>
-                    Je reste votre interlocuteur pour comprendre vos objectifs,
-                    vous expliquer les choix et vous accompagner dans la durée.
-                  </p>
-                  <button
-                    className="text-link"
-                    onClick={() => setOverlay({ kind: "legal" })}
-                  >
-                    Comprendre ce partenariat <Arrow />
-                  </button>
-                  <div className="partner-wordmark">
-                    PREDICTIS<span>.</span>
-                    <small>GROUPE PREMIUM</small>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-          <section className="page-scene section resources" id="ressources">
-            <div className="section-heading">
-              <Reveal from="left">
-                <div>
-                  <Eyebrow>QUELQUES REPÈRES POUR AVANCER</Eyebrow>
-                  <h2>
-                    Voir plus clair.
-                    <br />
-                    <em>Décider plus sereinement.</em>
-                  </h2>
-                </div>
-              </Reveal>
-              <Reveal from="right">
-                <p>
-                  Des éclairages simples,
-                  <br />
-                  pour se poser les bonnes questions.
-                </p>
-              </Reveal>
-            </div>
-            <div className="resource-grid">
-              {resources.map((article, i) => (
-                <Reveal
-                  key={article.title}
-                  delay={i * 0.07}
-                  from={i % 2 === 0 ? "left" : "right"}
-                >
-                  <button
-                    className="article-card"
-                    onClick={() => setOverlay({ kind: "article", index: i })}
-                  >
-                    <div
-                      className={`article-art ${article.color}`}
-                      aria-hidden="true"
-                    >
-                      <span className="art-circle" />
-                      <span className="art-line" />
-                      <span className="art-label">
-                        LES ÉCLAIRAGES
-                        <br />
-                        DE MAËL
-                      </span>
-                      <span className="art-index">0{i + 1}</span>
-                    </div>
-                    <div className="article-meta">
-                      {article.category}
-                      <span>{article.time} de lecture</span>
-                    </div>
-                    <h3>{article.title}</h3>
-                    <span className="text-link">
-                      Prendre un peu de recul <Arrow />
-                    </span>
-                  </button>
-                </Reveal>
-              ))}
-            </div>
-          </section>
-          <section className="page-scene section faq">
+          <section className="page-scene section faq" id="questions">
             <div className="faq-layout">
               <Reveal from="left">
                 <div>
@@ -772,46 +628,22 @@ export default function App() {
                 </div>
               </Reveal>
             </div>
+
           </section>
-          <Contact />
-        </main>
-        <footer>
-          <div className="footer-top">
-            <a href="#accueil" className="footer-brand">
-              Maël Verré<span>Le patrimoine, à votre mesure.</span>
-            </a>
-            <p>
-              Conseil en gestion de patrimoine
-              <br />
-              Nice · France entière à distance
-            </p>
-            <a href="#accueil" className="back-top">
-              Revenir en haut <Arrow />
-            </a>
-          </div>
-          <div className="footer-bottom">
-            <span>© {new Date().getFullYear()} Maël Verré</span>
-            <div>
-              <button onClick={() => setOverlay({ kind: "legal" })}>
-                Mentions légales & transparence
-              </button>
-              <button onClick={() => setOverlay({ kind: "privacy" })}>
-                Confidentialité
-              </button>
-            </div>
-            <span>Avec attention, pour demain.</span>
-          </div>
-        </footer>
+          <Contact
+            onContact={() => { setBookingSession((session) => session + 1); setBookingOpen(true); }}
+            onLegal={() => setOverlay({ kind: "legal" })}
+            onPrivacy={() => setOverlay({ kind: "privacy" })}
+          />
+      </main>
         {overlay && (
           <Modal
             title={
               overlay.kind === "service"
                 ? services[overlay.index].title
-                : overlay.kind === "article"
-                  ? resources[overlay.index].title
-                  : overlay.kind === "legal"
-                    ? "En toute transparence."
-                    : "Vos données, simplement."
+                : overlay.kind === "legal"
+                  ? "En toute transparence."
+                  : "Vos données, simplement."
             }
             onClose={() => setOverlay(null)}
           >
@@ -839,31 +671,6 @@ export default function App() {
                   onClick={() => setOverlay(null)}
                 >
                   Parlons de votre projet <Arrow />
-                </a>
-              </>
-            ) : overlay.kind === "article" ? (
-              <>
-                <p className="eyebrow">
-                  {resources[overlay.index].category} ·{" "}
-                  {resources[overlay.index].time} DE LECTURE
-                </p>
-                {resources[overlay.index].paragraphs.map((p, i) => (
-                  <p className="article-paragraph" key={p}>
-                    <span>0{i + 1}</span>
-                    {p}
-                  </p>
-                ))}
-                <aside>
-                  Ces repères généraux servent à préparer une conversation. Ils
-                  ne constituent pas une recommandation d’investissement
-                  personnalisée.
-                </aside>
-                <a
-                  href="#contact"
-                  className="button primary"
-                  onClick={() => setOverlay(null)}
-                >
-                  Et pour votre situation ? <Arrow />
                 </a>
               </>
             ) : overlay.kind === "legal" ? (
@@ -905,9 +712,10 @@ export default function App() {
             ) : (
               <>
                 <p>
-                  Cette version de démonstration n’envoie pas les informations
-                  saisies dans le formulaire et ne les conserve pas après
-                  fermeture ou rechargement de la page.
+                  La prise de rendez-vous est fournie par Cal.com. Lorsque vous
+                  utilisez le calendrier, les informations nécessaires à la
+                  réservation sont transmises à Cal.com et traitées selon ses
+                  propres conditions et sa politique de confidentialité.
                 </p>
                 <p>
                   Aucun outil publicitaire ou de mesure d’audience n’est
@@ -916,7 +724,7 @@ export default function App() {
                   requête.
                 </p>
                 <p>
-                  Avant l’activation d’un service de contact, cette page devra
+                  Avant la publication, cette page devra
                   préciser le responsable de traitement, les finalités, la base
                   juridique, les destinataires, la durée de conservation et les
                   modalités d’exercice des droits.
@@ -925,7 +733,13 @@ export default function App() {
             )}
           </Modal>
         )}
-      </>
+        {bookingOpen && (
+          <Modal className="booking-dialog" title="Faisons connaissance" onClose={() => setBookingOpen(false)}>
+            <p className="lead">Choisissez le créneau qui vous convient pour notre premier échange.</p>
+            <CalBooking session={bookingSession} onBooked={() => setBookingSession((current) => current + 1)} />
+          </Modal>
+        )}
+      </div>
     </ScrollDirectionContext.Provider>
   );
 }
