@@ -3539,3 +3539,89 @@ section.page-scene.contact-section > footer .footer-bottom button {
     display: block !important;
   }
 }
+
+/* Fin de page visible, et contenu mobile calé sous le titre. */
+.opening-page::before,
+section.page-scene:not(.contact-section)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: var(--accent);
+  z-index: 6;
+  pointer-events: none;
+}
+section.page-scene.quote-section::before {
+  background: var(--light-accent);
+}
+.opening-page,
+section.page-scene:not(.contact-section) {
+  padding-bottom: max(var(--scene-air), 22px) !important;
+}
+
+@media (max-width: 800px) {
+  section.page-scene:not(.contact-section):not(.quote-section) {
+    justify-content: flex-start !important;
+  }
+  section.page-scene.expertise .service-grid {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    grid-template-rows: auto auto !important;
+    align-items: stretch;
+    overflow: visible;
+  }
+  section.page-scene.expertise .service-grid > div,
+  section.page-scene.expertise .service-card {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  section.page-scene.expertise .service-card {
+    height: 100% !important;
+  }
+  section.page-scene.expertise .service-card {
+    padding: 14px 14px 12px !important;
+    overflow: visible;
+  }
+  section.page-scene.expertise .service-card p {
+    margin: 0 0 10px !important;
+  }
+  section.page-scene.expertise .card-bottom {
+    position: static !important;
+    margin-top: auto;
+    background: transparent;
+  }
+  section.page-scene.faq .faq-layout {
+    height: auto !important;
+    align-items: start;
+    align-content: start;
+    grid-template-rows: auto auto !important;
+    gap: 20px !important;
+  }
+  section.page-scene.faq .faq-layout > div:last-child {
+    display: block !important;
+  }
+  section.page-scene.about .values {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    margin-top: 18px !important;
+    padding-top: 0 !important;
+  }
+  section.page-scene.about .values > div {
+    position: relative;
+    padding: 14px 0 14px 56px !important;
+    border-bottom: 1px solid var(--border);
+  }
+  section.page-scene.about .values > div > div > span {
+    position: absolute !important;
+    left: 0;
+    top: 16px;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  section.page-scene.method .method-panel {
+    flex: 0 0 auto !important;
+  }
+}
