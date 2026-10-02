@@ -297,11 +297,29 @@ function CalBooking({ session, onBooked }: { session: number; onBooked: () => vo
   const bookingUrl = import.meta.env.VITE_CALCOM_URL?.trim();
   const booked = useRef(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setReady(false);
+    const fallback = window.setTimeout(() => setReady(true), 10000);
+    return () => window.clearTimeout(fallback);
+  }, [session]);
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (!/^https:\/\/([a-z0-9-]+\.)?cal\.com$/.test(event.origin)) return;
       const data = event.data;
-      const type = data && typeof data === "object" ? String((data as { type?: string }).type || "") : "";
+      if (!data || typeof data !== "object") return;
+      const message = data as { type?: string; originator?: string; iframeHeight?: number };
+      const type = String(message.type || "");
+      if (message.originator === "CAL" && type === "__iframeReady" && event.source) {
+        (event.source as Window).postMessage(
+          { originator: "CAL", method: "parentKnowsIframeReady", arg: {} },
+          event.origin,
+        );
+      }
+      const height = Number(message.iframeHeight || 0);
+      if (type === "linkReady" || type === "__windowLoadComplete" || (type === "__dimensionChanged" && height > 240)) {
+        setReady(true);
+      }
       if (!booked.current && /bookingSuccessful/i.test(type)) {
         booked.current = true;
         setConfirmed(true);
@@ -332,7 +350,24 @@ function CalBooking({ session, onBooked }: { session: number; onBooked: () => vo
   return (
     <>
       {confirmed && <p className="booking-confirmed" role="status">Rendez-vous confirmé. Ce créneau n’est plus proposé.</p>}
-      <iframe key={session} className="cal-embed" src={url.toString()} title="Réserver un rendez-vous avec Maël Verré" referrerPolicy="strict-origin-when-cross-origin" />
+      <div className="cal-frame" aria-busy={!ready}>
+        {!ready && (
+          <div className="cal-loading" role="status" aria-live="polite">
+            <span className="cal-loading-mark" aria-hidden="true" />
+            <p>Ouverture de l’agenda…</p>
+          </div>
+        )}
+        <iframe
+          key={session}
+          className="cal-embed"
+          src={url.toString()}
+          title="Réserver un rendez-vous avec Maël Verré"
+          referrerPolicy="strict-origin-when-cross-origin"
+          onLoad={() => {
+            window.setTimeout(() => setReady(true), 4000);
+          }}
+        />
+      </div>
     </>
   );
 }
