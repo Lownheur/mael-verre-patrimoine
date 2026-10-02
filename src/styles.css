@@ -3450,4 +3450,27 @@ section.page-scene.contact-section > footer .footer-bottom button {
     min-height: 48px;
     font-size: 15px;
   }
+  section.page-scene.expertise .service-card {
+    position: relative;
+    padding: 12px 12px 42px !important;
+    overflow: hidden;
+  }
+  section.page-scene.expertise .service-card p {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    max-height: 8.4em;
+    overflow: hidden;
+    margin: 0 !important;
+  }
+  section.page-scene.expertise .card-bottom {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 8px;
+    margin: 0;
+    background: var(--paper);
+  }
+  section.page-scene.about .values p br {
+    display: block !important;
+  }
 }
